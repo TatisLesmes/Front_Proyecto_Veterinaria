@@ -1,12 +1,12 @@
-import React from "react";
+//import React from "react";
 import NavBar from "../components/NavBar";
 import TablaRegistros from "../components/Registros/TablaRegistros";
 
-const Registro=()=>{
-    return(
+const Registro = () => {
+    return (
         <>
-        <NavBar/>
-        <TablaRegistros/>
+            <NavBar />
+            <TablaRegistros />
         </>
     )
 }

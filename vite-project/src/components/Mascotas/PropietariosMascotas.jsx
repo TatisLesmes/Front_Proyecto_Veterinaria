@@ -4,12 +4,12 @@ import { Column } from "primereact/column";
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
 
-const PropietariosMacotas= ({rowData}) => {
+const PropietariosMacotas = ({ rowData }) => {
   const [visible, setVisible] = useState(false);
   const [row, setRow] = useState();
-  useEffect(()=>{
+  useEffect(() => {
     setRow(rowData.propietario)
-  },[])
+  }, [])
   return (
     <div className="card flex justify-content-center">
       <Button

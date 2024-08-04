@@ -15,18 +15,18 @@ const EditMascotas = ({ rowData, setFlag }) => {
   const [selectedType, setSelectedType] = useState(null);
   const [selectPropietario, setSelectPropietario] = useState("");
   const [propietarios, setPropietarios] = useState([]);
-  
-  const type=[
-    {name:"perro", code:"perro"},
-    {name:"gato", code:"gato"},
-    {name:"otro",code:"otro"}
-]
 
-  useEffect(()=>{
+  const type = [
+    { name: "perro", code: "perro" },
+    { name: "gato", code: "gato" },
+    { name: "otro", code: "otro" }
+  ]
+
+  useEffect(() => {
     setID(rowData._id)
     setName(rowData.nombre)
     setSelectedType(rowData.type)
-  },[rowData])
+  }, [rowData])
 
 
   const updateMascota = () => {
@@ -35,7 +35,7 @@ const EditMascotas = ({ rowData, setFlag }) => {
       nombre: name,
       tipo: selectedType.name,
       idpropietario: selectPropietario,
-      
+
     };
 
     fetch(`https://back-proyecto-segundo-cicnuenta.vercel.app/mascota/${id}`, {
@@ -74,10 +74,10 @@ const EditMascotas = ({ rowData, setFlag }) => {
   };
 
   const cleanFields = () => {
-    
+
     setName("");
     setSelectedType(null)
-    
+
   };
   const fetchPropietarios = async () => {
     try {
@@ -94,7 +94,7 @@ const EditMascotas = ({ rowData, setFlag }) => {
     }
   };
   fetchPropietarios();
- 
+
 
   const headerElement = (
     <div className="inline-flex align-items-center justify-content-center gap-2">
@@ -119,9 +119,9 @@ const EditMascotas = ({ rowData, setFlag }) => {
     </div>
   );
   return (
-    
+
     <div className="card flex justify-content-center">
-        
+
       <Button
         label="Editar"
         icon="pi pi-pencil"
@@ -138,12 +138,12 @@ const EditMascotas = ({ rowData, setFlag }) => {
       >
         {/**Form */}
         <div className="card flex flex-column md:flex-row gap-3">
-        <div className="p-inputgroup flex-1">
+          <div className="p-inputgroup flex-1">
             <span className="p-inputgroup-addon">_ID</span>
             <InputText placeholder="ID" value={id} disabled
             />
           </div>
-          
+
           <div className="p-inputgroup flex-1">
             <span className="p-inputgroup-addon"><i className="pi pi-user"></i></span>
             <InputText placeholder="Nombre" value={name} onChange={(e) => setName(e.target.value)} />
@@ -169,7 +169,7 @@ const EditMascotas = ({ rowData, setFlag }) => {
               options={propietarios}
               optionLabel="nombre"
               optionValue="_id"
-              placeholder="Selecciona una Propietario"
+              placeholder="Selecciona un Propietario"
               className="w-full md:w-14rem"
             />
           </div>

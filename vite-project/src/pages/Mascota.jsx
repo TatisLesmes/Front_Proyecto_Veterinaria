@@ -2,11 +2,11 @@ import React from "react";
 import NavBar from "../components/NavBar";
 import TablaMascotas from "../components/Mascotas/TablaMascotas";
 
-const Mascota=()=>{
-    return(
+const Mascota = () => {
+    return (
         <>
-        <NavBar/>
-        <TablaMascotas/>
+            <NavBar />
+            <TablaMascotas />
         </>
     )
 }

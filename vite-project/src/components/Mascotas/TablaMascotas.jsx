@@ -86,9 +86,8 @@ const TablaMascotas = () => {
       <span className="text-xl text-900 font-bold">Mascotas</span>
     </div>
   );
-  const footer = `En total hay ${
-    mascotas ? mascotas.length : 0
-  } mascotas.`;
+  const footer = `En total hay ${mascotas ? mascotas.length : 0
+    } mascotas.`;
 
   return (
     <Card title={search} style={{ margin: "15px" }}>
@@ -105,9 +104,9 @@ const TablaMascotas = () => {
         <Column field="tipo" header="tipo"></Column>
         <Column
           header="Propietarios"
-          body={(rowData) =>(
-             <PropietariosMascotas rowData={rowData} />
-             )}
+          body={(rowData) => (
+            <PropietariosMascotas rowData={rowData} />
+          )}
         ></Column>
         <Column
           header="Editar"

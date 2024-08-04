@@ -36,7 +36,7 @@ const DeleteMascotas = ({ rowData, setFlag }) => {
           })
           .catch((error) => {
             Swal.fire({
-              title:`Error al elminar: ${error}`,
+              title: `Error al elminar: ${error}`,
               icon: "error",
             })
           });
