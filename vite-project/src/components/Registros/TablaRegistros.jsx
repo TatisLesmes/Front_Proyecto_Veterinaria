@@ -87,9 +87,8 @@ const TablaRegistros = () => {
       <span className="text-xl text-900 font-bold">Registros</span>
     </div>
   );
-  const footer = `En total hay ${
-    registros ? registros.length : 0
-  } mascotas.`;
+  const footer = `En total hay ${registros ? registros.length : 0
+    } registros de mascotas.`;
 
   return (
     <Card title={search} style={{ margin: "15px" }}>
@@ -107,15 +106,15 @@ const TablaRegistros = () => {
         <Column field="temperatura" header="temperatura"></Column>
         <Column
           header="Mascota"
-          body={(rowData) =>(
-             <RegistroMascotas rowData={rowData} />
-             )}
+          body={(rowData) => (
+            <RegistroMascotas rowData={rowData} />
+          )}
         ></Column>
         <Column
           header="Servicio"
-          body={(rowData) =>(
-             <RegistroServicios rowData={rowData} />
-             )}
+          body={(rowData) => (
+            <RegistroServicios rowData={rowData} />
+          )}
         ></Column>
         <Column
           header="Editar"

@@ -4,6 +4,7 @@ import Mascota from "../pages/Mascota"
 import Registro from "../pages/Registros";
 import Home from "../pages/Home";
 import Propietario from "../pages/Propietario";
+import Servicio from "../pages/Servicio";
 
 
 const routes = () => {
@@ -14,6 +15,8 @@ const routes = () => {
         <Route path="/mascota" Component={Mascota} />
         <Route path="/registro" Component={Registro} />
         <Route path="/propietario" Component={Propietario} />
+        <Route path="/servicio" Component={Servicio} />
+
       </Routes>
     </BrowserRouter>
   );
