@@ -11,34 +11,30 @@ import withReactContent from "sweetalert2-react-content";
 const EditServicios = ({ rowData, setFlag }) => {
     const [visible, setVisible] = useState(false);
     const [id, setID] = useState("");
-    const [name, setName] = useState("");
+    const [nombre, setNombre] = useState("");
     const [descripcion, setDescripcion] = useState("");
-    const [costo, setCosto] = useState("");
+    const [costo, setCosto] = useState(0);
 
-
-    const [selectServicio, setSelectServicio] = useState("");
-    const [servicios, setServicios] = useState([]);
-
-
+    const tiposServicio = [
+        { label: 'Básico', value: 'basico' },
+        { label: 'Premium', value: 'premium' }
+    ];
 
     useEffect(() => {
-        setID(rowData._id)
-        setName(rowData.nombre)
-        setDescripcion(rowData.descripcion)
-        setCosto(rowData.costo)
-
-
-
-    }, [rowData])
-
+        if (rowData) {
+            setID(rowData._id);
+            setNombre(rowData.nombre);
+            setDescripcion(rowData.descripcion);
+            setCosto(rowData.costo);
+        }
+    }, [rowData]);
 
     const updateServicio = () => {
         const MySwal = withReactContent(Swal);
-        const updateServicio = {
-            nombre: name,
+        const updateData = {
+            nombre: nombre,
             descripcion: descripcion,
-            costo: costo,
-
+            costo: costo
         };
 
         fetch(`https://back-proyecto-segundo-cicnuenta.vercel.app/servicio/${id}`, {
@@ -46,12 +42,11 @@ const EditServicios = ({ rowData, setFlag }) => {
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify(updateServicio),
+            body: JSON.stringify(updateData),
         })
             .then((response) => response.json())
             .then((data) => {
                 setVisible(false);
-
                 if (data.state) {
                     MySwal.fire({
                         title: <p>Editado</p>,
@@ -63,11 +58,10 @@ const EditServicios = ({ rowData, setFlag }) => {
                         icon: "error",
                     });
                 }
-
                 setFlag(true);
             })
             .catch((error) => {
-                console.log(error)
+                console.log(error);
                 setVisible(false);
                 MySwal.fire({
                     title: <p>{error.message}</p>,
@@ -77,56 +71,36 @@ const EditServicios = ({ rowData, setFlag }) => {
     };
 
     const cleanFields = () => {
-
-        setName("");
+        setNombre("");
         setDescripcion("");
-        setCosto("");
-
-
+        setCosto(0);
     };
-    const fetchServicio = async () => {
-        try {
-            const response = await fetch(
-                "https://back-proyecto-segundo-cicnuenta.vercel.app/servicio"
-            );
-            if (!response.ok) {
-                throw new Error("Failed to fetch servicios");
-            }
-            const data = await response.json();
-            setServicios(data.data);
-        } catch (error) {
-            console.error("Error fetchin servicios:", error);
-        }
-    };
-    fetchServicio();
-
 
     const headerElement = (
         <div className="inline-flex align-items-center justify-content-center gap-2">
-            <span className="font-bold white-space-nowrap">Agregar Propietario</span>
+            <span className="font-bold white-space-nowrap">Editar Servicio</span>
         </div>
     );
 
     const footerContent = (
         <div>
             <Button
-                label="limpiar"
+                label="Limpiar"
                 icon="pi pi-eraser"
                 severity="warning"
                 onClick={() => cleanFields()}
             />
             <Button
-                label="aceptar"
+                label="Aceptar"
                 icon="pi pi-user-edit"
                 severity="success"
                 onClick={() => updateServicio()}
             />
         </div>
     );
+
     return (
-
         <div className="card flex justify-content-center">
-
             <Button
                 label="Editar"
                 icon="pi pi-pencil"
@@ -141,46 +115,35 @@ const EditServicios = ({ rowData, setFlag }) => {
                 style={{ width: "50rem" }}
                 onHide={() => setVisible(false)}
             >
-                {/**Form */}
                 <div className="card flex flex-column md:flex-row gap-3">
                     <div className="p-inputgroup flex-1">
-                        <span className="p-inputgroup-addon">_ID</span>
-                        <InputText placeholder="ID" value={id} disabled
-                        />
-                    </div>
-
-                    <div className="p-inputgroup flex-1">
-                        <span className="p-inputgroup-addon"><i className="pi pi-user"></i></span>
-                        <InputText placeholder="Nombre" value={name} onChange={(e) => setName(e.target.value)} />
+                        <span className="p-inputgroup-addon">ID</span>
+                        <InputText placeholder="ID" value={id} disabled />
                     </div>
                     <div className="p-inputgroup flex-1">
                         <span className="p-inputgroup-addon"><i className="pi pi-user"></i></span>
-                        <InputText placeholder="Apellido" value={descripcion} onChange={(e) => setDescripcion(e.target.value)} />
+                        <InputText placeholder="Nombre" value={nombre} onChange={(e) => setNombre(e.target.value)} />
                     </div>
-
                     <div className="p-inputgroup flex-1">
-                        <span className="p-inputgroup-addon"><i className="pi pi-user"></i></span>
-                        <InputText placeholder="Telefono" value={costo} onChange={(e) => setCosto(e.target.value)} />
-                    </div>
-
-
-
-
-                    <div className="p-inputgroup flex-1">
-                        <span className="p-inputgroup-addon">Mascota</span>
+                        <span className="p-inputgroup-addon"><i className="pi pi-info-circle"></i></span>
                         <Dropdown
-                            value={selectServicio}
-                            onChange={(e) => setSelectServicio(e.value)}
-                            options={servicios}
-                            optionLabel="nombre"
-                            optionValue="_id"
-                            placeholder="Selecciona un servicio"
-                            className="w-full md:w-14rem"
+                            value={descripcion}
+                            options={tiposServicio}
+                            onChange={(e) => setDescripcion(e.value)}
+                            placeholder="Selecciona el tipo"
                         />
                     </div>
-
+                    <div className="p-inputgroup flex-1">
+                        <span className="p-inputgroup-addon"><i className="pi pi-dollar"></i></span>
+                        <InputText
+                            placeholder="Costo"
+                            value={costo}
+                            onChange={(e) => setCosto(e.target.value)}
+                            type="number"
+                            min="0"
+                        />
+                    </div>
                 </div>
-                {/**End Form */}
             </Dialog>
         </div>
     );

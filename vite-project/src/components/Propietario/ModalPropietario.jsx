@@ -1,31 +1,30 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
-import { InputNumber } from "primereact/inputnumber";
 import { InputText } from "primereact/inputtext";
-import { Dropdown } from "primereact/dropdown";
 
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 
 const ModalPropietario = ({ setFlag }) => {
     const [visible, setVisible] = useState(false);
-    const [id, setId] = useState();
+    const [id, setId] = useState("");
     const [name, setName] = useState("");
-    const [selectMascota, setSelectMascota] = useState("");
-    const [mascotas, setMascotas] = useState([]);
+    const [apellido, setApellido] = useState("");
+    const [telefono, setTelefono] = useState("");
 
     const addPropietario = () => {
         const MySwal = withReactContent(Swal);
 
         const newPropietario = {
-            id: id,
+            id: parseInt(id) || 0, // Asegúrate de que `id` sea un número
             nombre: name,
-
+            apellido: apellido,
+            telefono: parseInt(telefono) || 0 // Asegúrate de que `telefono` sea un número
         };
 
         fetch(
-            `https://back-proyecto-segundo-cicnuenta.vercel.app/propietario/${selectMascota}`,
+            `https://back-proyecto-segundo-cicnuenta.vercel.app/propietario`,
             {
                 method: "POST",
                 headers: {
@@ -58,29 +57,15 @@ const ModalPropietario = ({ setFlag }) => {
                 });
             });
     };
-    const fetchMascotas = async () => {
-        try {
-            const response = await fetch(
-                "https://back-proyecto-segundo-cicnuenta.vercel.app/mascota"
-            );
-            if (!response.ok) {
-                throw new Error("Failed to fetch mascotas");
-            }
-            const data = await response.json();
-            setMascotas(data.data);
-        } catch (error) {
-            console.error("Error fetchin mascotas:", error);
-        }
-    };
 
     const openDialog = () => {
         setVisible(true);
-        fetchMascotas();
     };
 
     const closeDialog = () => {
         setVisible(false);
     };
+
     const headerElement = (
         <div className="inline-flex align-items-center justify-content-center gap-2">
             <span className="font-bold white-space-nowrap">Agregar Propietario</span>
@@ -89,15 +74,26 @@ const ModalPropietario = ({ setFlag }) => {
 
     const footerContent = (
         <div>
-            <Button label="limpiar" icon="pi pi-eraser" severity="warning" />
+            <Button
+                label="Limpiar"
+                icon="pi pi-eraser"
+                severity="warning"
+                onClick={() => {
+                    setId("");
+                    setName("");
+                    setApellido("");
+                    setTelefono("");
+                }}
+            />
             <Button
                 label="Guardar"
-                icon="pi pi-user-edit"
+                icon="pi pi-save"
                 severity="success"
                 onClick={() => addPropietario()}
             />
         </div>
     );
+
     return (
         <div className="card flex justify-content-center">
             <Button icon="pi pi-save" onClick={() => openDialog()} />
@@ -110,16 +106,16 @@ const ModalPropietario = ({ setFlag }) => {
                 onHide={() => closeDialog()}
             >
                 {/**Form */}
-
                 <div className="card flex flex-column md:flex-row gap-3">
                     <div className="p-inputgroup flex-1">
                         <span className="p-inputgroup-addon">
-                            <i className="pi pi-user"></i>
+                            <i className="pi pi-id-card"></i>
                         </span>
                         <InputText
-                            placeholder="Id"
+                            placeholder="ID"
                             value={id}
-                            onChange={(e) => setId(parseInt(e.target.value) || "")}
+                            onChange={(e) => setId(e.target.value)}
+                            type="number"
                         />
                     </div>
                     <div className="p-inputgroup flex-1">
@@ -134,26 +130,29 @@ const ModalPropietario = ({ setFlag }) => {
                     </div>
                     <div className="p-inputgroup flex-1">
                         <span className="p-inputgroup-addon">
-                            <i className="pi pi-ticket"></i>
+                            <i className="pi pi-user"></i>
                         </span>
+                        <InputText
+                            placeholder="Apellido"
+                            value={apellido}
+                            onChange={(e) => setApellido(e.target.value)}
+                        />
                     </div>
                     <div className="p-inputgroup flex-1">
-                        <span className="p-inputgroup-addon">Mascota</span>
-                        <Dropdown
-                            value={selectMascota}
-                            onChange={(e) => setSelectMascota(e.value)}
-                            options={mascotas}
-                            optionLabel="nombre"
-                            optionValue="_id"
-                            placeholder="Selecciona una mascota"
-                            className="w-full md:w-14rem"
+                        <span className="p-inputgroup-addon">
+                            <i className="pi pi-phone"></i>
+                        </span>
+                        <InputText
+                            placeholder="Teléfono"
+                            value={telefono}
+                            onChange={(e) => setTelefono(e.target.value)}
+                            type="number"
                         />
                     </div>
                 </div>
                 {/**End Form */}
             </Dialog>
         </div>
-
     );
 };
 

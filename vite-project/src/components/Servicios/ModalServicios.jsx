@@ -1,31 +1,31 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
-import { InputNumber } from "primereact/inputnumber";
 import { InputText } from "primereact/inputtext";
 import { Dropdown } from "primereact/dropdown";
-
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 
 const ModalServicios = ({ setFlag }) => {
     const [visible, setVisible] = useState(false);
-    const [id, setId] = useState();
-    const [name, setName] = useState("");
-    const [selectServicio, setSelectServicio] = useState("");
-    const [servicios, setServicios] = useState([]);
+    const [id, setId] = useState("");
+    const [nombre, setNombre] = useState("");
+    const [descripcion, setDescripcion] = useState("");
+    const [costo, setCosto] = useState("");
+    // const [servicios, setServicios] = useState([]);
 
     const addServicios = () => {
         const MySwal = withReactContent(Swal);
 
         const newServicio = {
-            id: id,
-            nombre: name,
-
+            id: parseInt(id) || 0, // Asegúrate de que `id` sea un número
+            nombre: nombre,
+            descripcion: descripcion,
+            costo: parseFloat(costo) || 0 // Asegúrate de que `costo` sea un número
         };
 
         fetch(
-            `https://back-proyecto-segundo-cicnuenta.vercel.app/servicio/${selectServicio}`,
+            `https://back-proyecto-segundo-cicnuenta.vercel.app/servicio`,
             {
                 method: "POST",
                 headers: {
@@ -58,29 +58,15 @@ const ModalServicios = ({ setFlag }) => {
                 });
             });
     };
-    const fetchServicio = async () => {
-        try {
-            const response = await fetch(
-                "https://back-proyecto-segundo-cicnuenta.vercel.app/servicio"
-            );
-            if (!response.ok) {
-                throw new Error("Failed to fetch servicio");
-            }
-            const data = await response.json();
-            setServicios(data.data);
-        } catch (error) {
-            console.error("Error fetchin servicio:", error);
-        }
-    };
 
     const openDialog = () => {
         setVisible(true);
-        fetchServicio();
     };
 
     const closeDialog = () => {
         setVisible(false);
     };
+
     const headerElement = (
         <div className="inline-flex align-items-center justify-content-center gap-2">
             <span className="font-bold white-space-nowrap">Agregar Servicio</span>
@@ -89,15 +75,26 @@ const ModalServicios = ({ setFlag }) => {
 
     const footerContent = (
         <div>
-            <Button label="limpiar" icon="pi pi-eraser" severity="warning" />
+            <Button
+                label="Limpiar"
+                icon="pi pi-eraser"
+                severity="warning"
+                onClick={() => {
+                    setId("");
+                    setNombre("");
+                    setDescripcion("");
+                    setCosto("");
+                }}
+            />
             <Button
                 label="Guardar"
-                icon="pi pi-user-edit"
+                icon="pi pi-save"
                 severity="success"
                 onClick={() => addServicios()}
             />
         </div>
     );
+
     return (
         <div className="card flex justify-content-center">
             <Button icon="pi pi-save" onClick={() => openDialog()} />
@@ -110,16 +107,16 @@ const ModalServicios = ({ setFlag }) => {
                 onHide={() => closeDialog()}
             >
                 {/**Form */}
-
                 <div className="card flex flex-column md:flex-row gap-3">
                     <div className="p-inputgroup flex-1">
                         <span className="p-inputgroup-addon">
-                            <i className="pi pi-user"></i>
+                            <i className="pi pi-id-card"></i>
                         </span>
                         <InputText
-                            placeholder="Id"
+                            placeholder="ID"
                             value={id}
-                            onChange={(e) => setId(parseInt(e.target.value) || "")}
+                            onChange={(e) => setId(e.target.value)}
+                            type="number"
                         />
                     </div>
                     <div className="p-inputgroup flex-1">
@@ -128,32 +125,42 @@ const ModalServicios = ({ setFlag }) => {
                         </span>
                         <InputText
                             placeholder="Nombre"
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
+                            value={nombre}
+                            onChange={(e) => setNombre(e.target.value)}
                         />
                     </div>
                     <div className="p-inputgroup flex-1">
                         <span className="p-inputgroup-addon">
-                            <i className="pi pi-ticket"></i>
+                            <i className="pi pi-info-circle"></i>
                         </span>
+                        <Dropdown
+                            value={descripcion}
+                            onChange={(e) => setDescripcion(e.value)}
+                            options={[
+                                { label: 'Básico', value: 'basico' },
+                                { label: 'Premium', value: 'premium' }
+                            ]}
+                            placeholder="Selecciona el tipo"
+                            className="w-full md:w-14rem"
+                        />
                     </div>
                     <div className="p-inputgroup flex-1">
-                        <span className="p-inputgroup-addon">Servicio</span>
-                        <Dropdown
-                            value={selectServicio}
-                            onChange={(e) => setSelectServicio(e.value)}
-                            options={servicios}
-                            optionLabel="nombre"
-                            optionValue="_id"
-                            placeholder="Selecciona una mascota"
-                            className="w-full md:w-14rem"
+                        <span className="p-inputgroup-addon">
+                            <i className="pi pi-dollar"></i>
+                        </span>
+                        <InputText
+                            placeholder="Costo"
+                            value={costo}
+                            onChange={(e) => setCosto(e.target.value)}
+                            type="number"
+                            mode="currency"
+                            currency="USD"
                         />
                     </div>
                 </div>
                 {/**End Form */}
             </Dialog>
         </div>
-
     );
 };
 

@@ -105,7 +105,8 @@ const TablaPropietarios = () => {
             >
                 <Column field="id" header="id"></Column>
                 <Column field="nombre" header="Nombre"></Column>
-                <Column field="tipo" header="tipo"></Column>
+                <Column field="apellido" header="Apellido"></Column>
+                <Column field="telefono" header="Teléfono"></Column>
                 <Column
                     header="Mascotas"
                     body={(rowData) => (
